@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -42,7 +43,7 @@ class CongestionTaxCalculatorTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculator(String display, int excepted, Date input) {
-        int tax = new CongestionTaxCalculator().getTax(() -> "test", new Date[]{input});
+        int tax = new CongestionTaxCalculator().getTax(() -> "Car", new Date[]{input});
         Assertions.assertEquals(excepted, tax);
     }
 
@@ -69,7 +70,26 @@ class CongestionTaxCalculatorTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculatorMultipleDates(String display, int excepted, Date[] input) {
-        int tax = new CongestionTaxCalculator().getTax(() -> "test", input);
+        int tax = new CongestionTaxCalculator().getTax(() -> "Car", input);
+        Assertions.assertEquals(excepted, tax);
+    }
+
+    private static Stream<Arguments> taxCalculatorVehiclesType() {
+        return Stream.of(
+                Arguments.of("Emergency", 0),
+                Arguments.of("Bus", 0),
+                Arguments.of("Diplomat", 0),
+                Arguments.of("Motorcycle", 0),
+                Arguments.of("Military", 0),
+                Arguments.of("Foreign", 0),
+                Arguments.of("Tractor", 8)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void taxCalculatorVehiclesType(String vehicleType, int excepted) {
+        int tax = new CongestionTaxCalculator().getTax(() -> vehicleType, new Date[]{new Date(2013 - 1900, Calendar.JANUARY, 7, 6, 0, 0)});
         Assertions.assertEquals(excepted, tax);
     }
 
