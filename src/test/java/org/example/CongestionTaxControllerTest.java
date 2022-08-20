@@ -1,20 +1,17 @@
-package test.java.org.example;
+package org.example;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 
 @QuarkusTest
 class CongestionTaxControllerTest {
 
     @Test
-    void testComputeTax() {
+    void computeTax() {
         given().when()
                 .contentType(ContentType.JSON)
                 .body("""
@@ -33,7 +30,7 @@ class CongestionTaxControllerTest {
     }
 
     @Test
-    void testComputeTaxWithExemptVehicle() {
+    void computeTaxWithExemptVehicle() {
         given().when()
                 .contentType(ContentType.JSON)
                 .body("""

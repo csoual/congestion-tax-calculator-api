@@ -5,7 +5,10 @@ import org.example.domain.model.Vehicle;
 import org.example.infra.config.CongestionTaxConfig;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 @ApplicationScoped
 @AllArgsConstructor
