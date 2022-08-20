@@ -44,7 +44,7 @@ class CongestionTaxCalculatorTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculator(String display, int excepted, Date input) {
-        int tax = new CongestionTaxCalculator().getTax(() -> "Car", new Date[]{input});
+        int tax = new CongestionTaxCalculator().getTax(new Car(), new Date[]{input});
         Assertions.assertEquals(excepted, tax);
     }
 
@@ -71,7 +71,7 @@ class CongestionTaxCalculatorTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculatorMultipleDates(String display, int excepted, Date[] input) {
-        int tax = new CongestionTaxCalculator().getTax(() -> "Car", input);
+        int tax = new CongestionTaxCalculator().getTax(new Car(), input);
         Assertions.assertEquals(excepted, tax);
     }
 

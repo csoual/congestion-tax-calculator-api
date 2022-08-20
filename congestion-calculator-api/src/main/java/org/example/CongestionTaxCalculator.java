@@ -1,95 +1,109 @@
 package org.example;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CongestionTaxCalculator {
-    private static Map<String, Integer> tollFreeVehicles = new HashMap<>();
+    private static final Set<String> TOLL_FREE_VEHICLES = Set.of(
+            "Motorcycle",
+            "Bus",
+            "Emergency",
+            "Diplomat",
+            "Foreign",
+            "Military");
 
-    static {
-        tollFreeVehicles.put("Motorcycle", 0);
-        tollFreeVehicles.put("Tractor", 1);
-        tollFreeVehicles.put("Emergency", 2);
-        tollFreeVehicles.put("Diplomat", 3);
-        tollFreeVehicles.put("Foreign", 4);
-        tollFreeVehicles.put("Military", 5);
-    }
-    
-    public int getTax(Vehicle vehicle, Date[] dates)
-    {
+    private static final HashSet<Date> PUBLIC_HOLIDAY = new HashSet<>(List.of(
+            new Date(2013 - 1900, Calendar.JANUARY, 1),
+            new Date(2013 - 1900, Calendar.MARCH, 28),
+            new Date(2013 - 1900, Calendar.MARCH, 29),
+            new Date(2013 - 1900, Calendar.APRIL, 1),
+            new Date(2013 - 1900, Calendar.APRIL, 30),
+            new Date(2013 - 1900, Calendar.MAY, 1),
+            new Date(2013 - 1900, Calendar.MAY, 8),
+            new Date(2013 - 1900, Calendar.MAY, 9),
+            new Date(2013 - 1900, Calendar.JUNE, 5),
+            new Date(2013 - 1900, Calendar.JUNE, 6),
+            new Date(2013 - 1900, Calendar.JUNE, 21),
+            new Date(2013 - 1900, Calendar.NOVEMBER, 1),
+            new Date(2013 - 1900, Calendar.DECEMBER, 24),
+            new Date(2013 - 1900, Calendar.DECEMBER, 25),
+            new Date(2013 - 1900, Calendar.DECEMBER, 26),
+            new Date(2013 - 1900, Calendar.DECEMBER, 31)
+    ));
+
+    private static final HashSet<SlotPrice> SLOT_PRICES = new HashSet<>(List.of(
+            new SlotPrice(6, 0, 6, 29, 8),
+            new SlotPrice(6, 30, 6, 59, 13),
+            new SlotPrice(7, 0, 7, 59, 18),
+            new SlotPrice(8, 0, 8, 29, 13),
+            new SlotPrice(8, 30, 14, 59, 8),
+            new SlotPrice(15, 0, 15, 29, 13),
+            new SlotPrice(15, 30, 16, 59, 18),
+            new SlotPrice(17, 0, 17, 59, 13),
+            new SlotPrice(18, 0, 18, 29, 8)
+    ));
+
+    public int getTax(Vehicle vehicle, Date[] dates) {
         Date intervalStart = dates[0];
         int totalFee = 0;
 
         for (Date date : dates) {
+            int year = date.getYear() + 1900;
+            if (year != 2013) throw new IllegalArgumentException("Year " + year + " is not yet supported !");
             int nextFee = getTollFee(date, vehicle);
             int tempFee = getTollFee(intervalStart, vehicle);
 
-            long diffInMillies = date.getTime() - intervalStart.getTime();
-            long minutes = diffInMillies / 1000 / 60;
+            long diffInMillis = date.getTime() - intervalStart.getTime();
+            long minutes = diffInMillis / 1000 / 60;
 
             if (minutes <= 60) {
                 if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                totalFee += Math.max(nextFee, tempFee);
             } else {
                 totalFee += nextFee;
             }
-        }                
-      
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
+        }
+        return Math.min(60, totalFee);
     }
 
     private boolean isTollFreeVehicle(Vehicle vehicle) {
         if (vehicle == null) return false;
         String vehicleType = vehicle.getVehicleType();
-        return tollFreeVehicles.containsKey(vehicleType);
+        return TOLL_FREE_VEHICLES.contains(vehicleType);
     }
 
-    public int getTollFee(Date date, Vehicle vehicle)
-    {
+    public int getTollFee(Date date, Vehicle vehicle) {
         if (isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
 
         int hour = date.getHours();
         int minute = date.getMinutes();
 
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
+        for (SlotPrice slotPrice : SLOT_PRICES) {
+            if (slotPrice.contains(hour, minute))
+                return slotPrice.price();
+        }
+        return 0;
     }
 
-    private boolean isTollFreeDate(Date date)
-    {
-        int year = date.getYear();
-        int month = date.getMonth() + 1;
+    private boolean isTollFreeDate(Date date) {
+        int month = date.getMonth();
         int day = date.getDay() + 1;
-        int dayOfMonth = date.getDate();
+        Date dayDate = new Date(date.getYear(), date.getMonth(), date.getDate());
+        Date dayDateAfter = nextDay(dayDate);
+        return isFreeDay(day) || isFreeMonth(month) || PUBLIC_HOLIDAY.contains(dayDate) || PUBLIC_HOLIDAY.contains(dayDateAfter);
+    }
 
-        if (day == Calendar.SATURDAY || day == Calendar.SUNDAY) return true;
+    private Date nextDay(Date dayDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dayDate);
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        return cal.getTime();
+    }
 
-        if (year == 2013)
-        {
-            if ((month == 1 && dayOfMonth == 1) ||
-                    (month == 3 && (dayOfMonth == 28 || dayOfMonth == 29)) ||
-                    (month == 4 && (dayOfMonth == 1 || dayOfMonth == 30)) ||
-                    (month == 5 && (dayOfMonth == 1 || dayOfMonth == 8 || dayOfMonth == 9)) ||
-                    (month == 6 && (dayOfMonth == 5 || dayOfMonth == 6 || dayOfMonth == 21)) ||
-                    (month == 7) ||
-                    (month == 11 && dayOfMonth == 1) ||
-                    (month == 12 && (dayOfMonth == 24 || dayOfMonth == 25 || dayOfMonth == 26 || dayOfMonth == 31)))
-            {
-                return true;
-            }
-        }
-        return false;
+    private boolean isFreeMonth(int month) {
+        return month == Calendar.JULY;
+    }
+
+    private boolean isFreeDay(int day) {
+        return day == Calendar.SATURDAY || day == Calendar.SUNDAY;
     }
 }
