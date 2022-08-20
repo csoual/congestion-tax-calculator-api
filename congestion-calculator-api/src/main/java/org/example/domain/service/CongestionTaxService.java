@@ -1,20 +1,17 @@
 package org.example.domain.service;
 
-import org.example.domain.model.SlotPrice;
+import lombok.AllArgsConstructor;
 import org.example.domain.model.Vehicle;
+import org.example.infra.config.CongestionTaxConfig;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.*;
 
 @ApplicationScoped
+@AllArgsConstructor
 public class CongestionTaxService {
-    private static final Set<String> TOLL_FREE_VEHICLES = Set.of(
-            "Motorcycle",
-            "Bus",
-            "Emergency",
-            "Diplomat",
-            "Foreign",
-            "Military");
+
+    CongestionTaxConfig congestionTaxConfig;
 
     private static final HashSet<Date> PUBLIC_HOLIDAY = new HashSet<>(List.of(
             new Date(2013 - 1900, Calendar.JANUARY, 1),
@@ -33,18 +30,6 @@ public class CongestionTaxService {
             new Date(2013 - 1900, Calendar.DECEMBER, 25),
             new Date(2013 - 1900, Calendar.DECEMBER, 26),
             new Date(2013 - 1900, Calendar.DECEMBER, 31)
-    ));
-
-    private static final HashSet<SlotPrice> SLOT_PRICES = new HashSet<>(List.of(
-            new SlotPrice(6, 0, 6, 29, 8),
-            new SlotPrice(6, 30, 6, 59, 13),
-            new SlotPrice(7, 0, 7, 59, 18),
-            new SlotPrice(8, 0, 8, 29, 13),
-            new SlotPrice(8, 30, 14, 59, 8),
-            new SlotPrice(15, 0, 15, 29, 13),
-            new SlotPrice(15, 30, 16, 59, 18),
-            new SlotPrice(17, 0, 17, 59, 13),
-            new SlotPrice(18, 0, 18, 29, 8)
     ));
 
     public int getTax(Vehicle vehicle, Date[] dates) {
@@ -73,7 +58,7 @@ public class CongestionTaxService {
     private boolean isTollFreeVehicle(Vehicle vehicle) {
         if (vehicle == null) return false;
         String vehicleType = vehicle.getVehicleType();
-        return TOLL_FREE_VEHICLES.contains(vehicleType);
+        return congestionTaxConfig.tollFreeVehicles().contains(vehicleType);
     }
 
     public int getTollFee(Date date, Vehicle vehicle) {
@@ -82,7 +67,7 @@ public class CongestionTaxService {
         int hour = date.getHours();
         int minute = date.getMinutes();
 
-        for (SlotPrice slotPrice : SLOT_PRICES) {
+        for (CongestionTaxConfig.SlotPrice slotPrice : congestionTaxConfig.slotPrices()) {
             if (slotPrice.contains(hour, minute))
                 return slotPrice.price();
         }

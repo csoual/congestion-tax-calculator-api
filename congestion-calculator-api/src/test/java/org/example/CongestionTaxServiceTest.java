@@ -2,13 +2,13 @@ package org.example;
 
 import org.example.domain.model.Car;
 import org.example.domain.service.CongestionTaxService;
+import org.example.infra.config.CongestionTaxConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Stream;
 
 class CongestionTaxServiceTest {
@@ -42,7 +42,7 @@ class CongestionTaxServiceTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculator(String display, int excepted, Date input) {
-        int tax = new CongestionTaxService().getTax(new Car(), new Date[]{input});
+        int tax = new CongestionTaxService(new CongestionTaxConfigStub()).getTax(new Car(), new Date[]{input});
         Assertions.assertEquals(excepted, tax);
     }
 
@@ -69,7 +69,7 @@ class CongestionTaxServiceTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculatorMultipleDates(String display, int excepted, Date[] input) {
-        int tax = new CongestionTaxService().getTax(new Car(), input);
+        int tax = new CongestionTaxService(new CongestionTaxConfigStub()).getTax(new Car(), input);
         Assertions.assertEquals(excepted, tax);
     }
 
@@ -88,8 +88,44 @@ class CongestionTaxServiceTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculatorVehiclesType(String vehicleType, int excepted) {
-        int tax = new CongestionTaxService().getTax(() -> vehicleType, new Date[]{new Date(2013 - 1900, Calendar.JANUARY, 7, 6, 0, 0)});
+        int tax = new CongestionTaxService(new CongestionTaxConfigStub()).getTax(() -> vehicleType, new Date[]{new Date(2013 - 1900, Calendar.JANUARY, 7, 6, 0, 0)});
         Assertions.assertEquals(excepted, tax);
     }
+
+    public static class CongestionTaxConfigStub implements CongestionTaxConfig {
+
+        private static final Set<SlotPrice> SLOT_PRICES = new HashSet<>(List.of(
+                new SlotPriceImpl(6, 0, 6, 29, 8),
+                new SlotPriceImpl(6, 30, 6, 59, 13),
+                new SlotPriceImpl(7, 0, 7, 59, 18),
+                new SlotPriceImpl(8, 0, 8, 29, 13),
+                new SlotPriceImpl(8, 30, 14, 59, 8),
+                new SlotPriceImpl(15, 0, 15, 29, 13),
+                new SlotPriceImpl(15, 30, 16, 59, 18),
+                new SlotPriceImpl(17, 0, 17, 59, 13),
+                new SlotPriceImpl(18, 0, 18, 29, 8)
+        ));
+        private static final Set<String> TOLL_FREE_VEHICLES = Set.of(
+                "Motorcycle",
+                "Bus",
+                "Emergency",
+                "Diplomat",
+                "Foreign",
+                "Military");
+
+        @Override
+        public Set<String> tollFreeVehicles() {
+            return TOLL_FREE_VEHICLES;
+        }
+
+        @Override
+        public Set<SlotPrice> slotPrices() {
+            return SLOT_PRICES;
+        }
+
+    }
+
+    public record SlotPriceImpl(Integer startHour, Integer startMinute, Integer endHour, Integer endMinute,
+                                Integer price) implements CongestionTaxConfig.SlotPrice {}
 
 }

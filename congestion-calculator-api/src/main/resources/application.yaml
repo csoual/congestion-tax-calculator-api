@@ -1,0 +1,59 @@
+config:
+  toll-free-vehicles:
+    - "Motorcycle"
+    - "Bus"
+    - "Emergency"
+    - "Diplomat"
+    - "Foreign"
+    - "Military"
+  slot-prices:
+    - start-hour: 6
+      start-minute: 0
+      end-hour: 6
+      end-minute: 29
+      price: 8
+    - start-hour: 6
+      start-minute: 30
+      end-hour: 6
+      end-minute: 59
+      price: 13
+    - start-hour: 7
+      start-minute: 0
+      end-hour: 07
+      end-minute: 59
+      price: 18
+    - start-hour: 8
+      start-minute: 0
+      end-hour: 8
+      end-minute: 29
+      price: 13
+    - start-hour: 8
+      start-minute: 30
+      end-hour: 14
+      end-minute: 59
+      price: 8
+    - start-hour: 15
+      start-minute: 0
+      end-hour: 15
+      end-minute: 29
+      price: 13
+    - start-hour: 15
+      start-minute: 30
+      end-hour: 16
+      end-minute: 59
+      price: 18
+    - start-hour: 17
+      start-minute: 0
+      end-hour: 17
+      end-minute: 59
+      price: 13
+    - start-hour: 18
+      start-minute: 0
+      end-hour: 18
+      end-minute: 29
+      price: 8
+    - start-hour: 18
+      start-minute: 30
+      end-hour: 5
+      end-minute: 59
+      price: 0
