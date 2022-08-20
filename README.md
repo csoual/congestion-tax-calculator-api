@@ -1,4 +1,4 @@
-# Congestion Tax Calculator
+# Congestion Tax Calculator API
 
 Welcome the Volvo Cars Congestion Tax Calculator assignment.
 
