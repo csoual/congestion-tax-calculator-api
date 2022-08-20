@@ -1,8 +1,13 @@
-package org.example;
+package org.example.domain.service;
 
+import org.example.domain.model.SlotPrice;
+import org.example.domain.model.Vehicle;
+
+import javax.enterprise.context.ApplicationScoped;
 import java.util.*;
 
-public class CongestionTaxCalculator {
+@ApplicationScoped
+public class CongestionTaxService {
     private static final Set<String> TOLL_FREE_VEHICLES = Set.of(
             "Motorcycle",
             "Bus",

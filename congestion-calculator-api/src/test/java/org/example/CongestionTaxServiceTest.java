@@ -1,19 +1,17 @@
 package org.example;
 
+import org.example.domain.model.Car;
+import org.example.domain.service.CongestionTaxService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class CongestionTaxCalculatorTest {
+class CongestionTaxServiceTest {
 
     private static Stream<Arguments> taxCalculator() {
         return Stream.of(
@@ -44,7 +42,7 @@ class CongestionTaxCalculatorTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculator(String display, int excepted, Date input) {
-        int tax = new CongestionTaxCalculator().getTax(new Car(), new Date[]{input});
+        int tax = new CongestionTaxService().getTax(new Car(), new Date[]{input});
         Assertions.assertEquals(excepted, tax);
     }
 
@@ -71,7 +69,7 @@ class CongestionTaxCalculatorTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculatorMultipleDates(String display, int excepted, Date[] input) {
-        int tax = new CongestionTaxCalculator().getTax(new Car(), input);
+        int tax = new CongestionTaxService().getTax(new Car(), input);
         Assertions.assertEquals(excepted, tax);
     }
 
@@ -90,7 +88,7 @@ class CongestionTaxCalculatorTest {
     @ParameterizedTest
     @MethodSource
     void taxCalculatorVehiclesType(String vehicleType, int excepted) {
-        int tax = new CongestionTaxCalculator().getTax(() -> vehicleType, new Date[]{new Date(2013 - 1900, Calendar.JANUARY, 7, 6, 0, 0)});
+        int tax = new CongestionTaxService().getTax(() -> vehicleType, new Date[]{new Date(2013 - 1900, Calendar.JANUARY, 7, 6, 0, 0)});
         Assertions.assertEquals(excepted, tax);
     }
 
