@@ -1,4 +1,4 @@
-package org.example;
+package test.java.org.example;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
