@@ -1,8 +1,8 @@
 package org.example;
 
-import org.example.domain.model.Car;
-import org.example.domain.service.CongestionTaxService;
-import org.example.infra.config.CongestionTaxConfig;
+import org.example.service.model.Car;
+import org.example.service.CongestionTaxService;
+import org.example.config.CongestionTaxConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

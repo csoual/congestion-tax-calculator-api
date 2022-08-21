@@ -1,4 +1,4 @@
-package org.example.infra.config;
+package org.example.config;
 
 import io.smallrye.config.ConfigMapping;
 

@@ -1,8 +1,8 @@
-package org.example.domain.service;
+package org.example.service;
 
 import lombok.AllArgsConstructor;
-import org.example.domain.model.Vehicle;
-import org.example.infra.config.CongestionTaxConfig;
+import org.example.service.model.Vehicle;
+import org.example.config.CongestionTaxConfig;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Calendar;

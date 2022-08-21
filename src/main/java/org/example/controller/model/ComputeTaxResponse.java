@@ -1,4 +1,4 @@
-package org.example.infra.api.model;
+package org.example.controller.model;
 
 public record ComputeTaxResponse(Integer taxAmount) {
 

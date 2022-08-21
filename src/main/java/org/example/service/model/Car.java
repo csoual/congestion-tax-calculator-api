@@ -1,4 +1,4 @@
-package org.example.domain.model;
+package org.example.service.model;
 
 public class Car implements Vehicle {
 

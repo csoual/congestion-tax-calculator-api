@@ -1,8 +1,8 @@
-package org.example.infra.api.controller;
+package org.example.controller;
 
-import org.example.domain.service.CongestionTaxService;
-import org.example.infra.api.model.ComputeTaxRequest;
-import org.example.infra.api.model.ComputeTaxResponse;
+import org.example.controller.model.ComputeTaxRequest;
+import org.example.service.CongestionTaxService;
+import org.example.controller.model.ComputeTaxResponse;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
