@@ -1,4 +1,4 @@
-package org.example;
+package fr.cedric.taxcalculator;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;

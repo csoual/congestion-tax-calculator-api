@@ -1,4 +1,4 @@
-package org.example.config;
+package fr.cedric.taxcalculator.config;
 
 import io.smallrye.config.ConfigMapping;
 

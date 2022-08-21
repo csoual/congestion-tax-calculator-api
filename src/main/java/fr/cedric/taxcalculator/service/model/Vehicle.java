@@ -1,4 +1,4 @@
-package org.example.service.model;
+package fr.cedric.taxcalculator.service.model;
 
 public interface Vehicle {
     String getVehicleType();

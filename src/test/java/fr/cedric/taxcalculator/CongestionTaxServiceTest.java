@@ -1,8 +1,8 @@
-package org.example;
+package fr.cedric.taxcalculator;
 
-import org.example.service.model.Car;
-import org.example.service.CongestionTaxService;
-import org.example.config.CongestionTaxConfig;
+import fr.cedric.taxcalculator.service.model.Car;
+import fr.cedric.taxcalculator.service.CongestionTaxService;
+import fr.cedric.taxcalculator.config.CongestionTaxConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

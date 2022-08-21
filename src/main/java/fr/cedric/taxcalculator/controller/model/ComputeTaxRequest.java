@@ -1,4 +1,4 @@
-package org.example.controller.model;
+package fr.cedric.taxcalculator.controller.model;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 

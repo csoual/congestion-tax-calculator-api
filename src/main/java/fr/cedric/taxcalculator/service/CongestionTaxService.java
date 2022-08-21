@@ -1,8 +1,8 @@
-package org.example.service;
+package fr.cedric.taxcalculator.service;
 
+import fr.cedric.taxcalculator.config.CongestionTaxConfig;
+import fr.cedric.taxcalculator.service.model.Vehicle;
 import lombok.AllArgsConstructor;
-import org.example.service.model.Vehicle;
-import org.example.config.CongestionTaxConfig;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Calendar;

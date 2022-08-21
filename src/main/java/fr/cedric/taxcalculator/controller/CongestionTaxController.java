@@ -1,8 +1,8 @@
-package org.example.controller;
+package fr.cedric.taxcalculator.controller;
 
-import org.example.controller.model.ComputeTaxRequest;
-import org.example.service.CongestionTaxService;
-import org.example.controller.model.ComputeTaxResponse;
+import fr.cedric.taxcalculator.controller.model.ComputeTaxRequest;
+import fr.cedric.taxcalculator.controller.model.ComputeTaxResponse;
+import fr.cedric.taxcalculator.service.CongestionTaxService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
